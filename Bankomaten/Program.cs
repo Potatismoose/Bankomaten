@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Bankomaten
 {
@@ -6,8 +7,10 @@ namespace Bankomaten
     {
         static void Main(string[] args)
         {
-            bool loggedIn = default(bool);
+            bool ContinueOn = default(bool);
+            bool quit = default(bool);
             string errorMsg = default(string);
+            char menuChoice = default(char);
 
             do
             {
@@ -15,19 +18,29 @@ namespace Bankomaten
                 Console.WriteLine("Välkommen till bankomaten med obegränsat med pengar.");
                 if (!string.IsNullOrEmpty(errorMsg))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(errorMsg);
-                    Console.ResetColor();
+                    ColorRed(errorMsg);
+                    errorMsg = default(string);
                 }
                 Console.Write("Ange din PIN-kod: ");
                 int userPinInput = Convert.ToInt32(Console.ReadLine());
-                loggedIn = Login(userPinInput);
-                if (!loggedIn)
+                ContinueOn = Login(userPinInput);
+                if (!ContinueOn)
                     errorMsg = "Felaktig pinkod";
-            } while (!loggedIn);
+            } while (!ContinueOn);
+            ContinueOn = default(bool);
+            
+            Console.Clear();
+            ColorGreen("Inloggningen lyckades");
+            Thread.Sleep(1000);
+            Console.Clear();
 
-            Console.WriteLine("You got logged in");
-            Console.ReadKey();
+            do
+            {
+                Console.WriteLine("Menyn ska presenteras");
+
+                Console.ReadKey();
+            } while (!quit);
+
         }
 
         public static bool Login(int pinCode)
@@ -38,5 +51,20 @@ namespace Bankomaten
                 return false;
 
         }
+
+        public static void ColorGreen(string text) {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+        public static void ColorRed(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+        
     }
 }
